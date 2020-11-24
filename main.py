@@ -15,12 +15,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
-        try:
-            result = request.urlopen(coordinates_url)
-            data = json.load(result)
-        except Exception as e:
-            print(e)
-            data = {'altitude': 'None', 'latitude': 'None'}
+        print(self.headers)
 
         self.wfile.write(bytes("<html><head><title>Title goes here.</title></head>", "utf-8"))
         self.wfile.write(bytes(f"<body><p>altitude: {data['altitude']} latitude: {data['latitude']}</p>", "utf-8"))
