@@ -10,12 +10,17 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
     def do_GET(self):
-        """Respond to a GET request."""
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
-        print(self.headers)
+        print(f"x-request-id      : {self.headers['x-request-id']}")
+        print(f"x-b3-traceid      : {self.headers['x-b3-traceid']}")
+        print(f"x-b3-spanid       : {self.headers['x-b3-spanid']}")
+        print(f"x-b3-parentspanid : {self.headers['x-b3-parentspanid']}")
+        print(f"x-b3-sampled      : {self.headers['x-b3-sampled']}")
+        print(f"x-b3-flags        : {self.headers['x-b3-flags']}")
+        print(f"b3                : {self.headers['b3']}")
 
         try:
             headers = {
@@ -34,20 +39,12 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
             print(e)
             data = {'altitude': 'None', 'latitude': 'None'}
 
-
-        
-
-
         self.wfile.write(bytes("<html><head><title>Title goes here.</title></head>", "utf-8"))
         self.wfile.write(bytes(f"<body><p>altitude: {data['altitude']} latitude: {data['latitude']}</p>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
-
-
 PORT = 8000
-
 Handler = http.server.SimpleHTTPRequestHandler
-
 coordinates_url = getenv('COORDINATES_URL')
 
 with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
